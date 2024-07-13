@@ -1,6 +1,13 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using HummingbirdFeeder.Data;
+using System.Text.Json;
+using System.Linq;
+using HummingbirdFeeder.Models;
+using System.Diagnostics;
+
+
+
 
 namespace HummingbirdFeeder.Pages
 {
@@ -13,6 +20,12 @@ namespace HummingbirdFeeder.Pages
         public Feeder? NewFeeder { get; set; }
         public Feeder? FeederToUpdate { get; set; }
         public List<Feeder>? MyFeeders { get; set; }
+        private HttpClient _client = new HttpClient()
+        {
+            BaseAddress = new Uri("http://api.weatherapi.com/")
+        };
+        public Forecastday forecastday;
+        public double maxTemp;
 
         protected override async Task OnInitializedAsync()
         {
@@ -83,6 +96,18 @@ namespace HummingbirdFeeder.Pages
                 await _context.SaveChangesAsync();
             }
             await ShowFeeders();
+        }
+
+        public async Task GetTemperatureMax()
+        {
+            string zipcode = "40204";
+            string todaysDate = DateTime.Now.ToString("yyyy-MM-dd");
+            string key = "";
+            string urlSuffix = $"v1/history.json?key={key}&q={zipcode}&dt={todaysDate}";
+            var response = await _client.GetAsync(urlSuffix);
+            var rawJson = await response.Content.ReadAsStringAsync();
+            Root rootObject = JsonSerializer.Deserialize<Root>(rawJson);
+            maxTemp = rootObject.forecast.forecastday[0].day.maxtemp_f;
         }
     }
 }

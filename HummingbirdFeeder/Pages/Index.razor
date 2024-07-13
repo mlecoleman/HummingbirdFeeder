@@ -6,6 +6,13 @@
 
 <PageTitle>Feeder</PageTitle>
 
+<button name="submit" type="submit" class="btn btn-primary" @onclick="GetTemperatureMax">API</button>
+
+@if (maxTemp != 0)
+{
+<h3>TempMax: @maxTemp</h3>
+}
+
 
 @if (ShowCreate)
 {
