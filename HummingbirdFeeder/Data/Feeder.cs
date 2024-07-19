@@ -5,6 +5,7 @@ namespace HummingbirdFeeder.Data
 	{
 		public int FeederId { get; set;}
 		public int Zipcode { get; set; }
+		public int LastChangeDate { get; set; }
     }
 }
 

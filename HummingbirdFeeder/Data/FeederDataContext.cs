@@ -24,12 +24,17 @@ namespace HummingbirdFeeder.Data
             modelBuilder.Entity<Feeder>()
                 .ToTable("Feeder");
 
+            DateTime today = DateTime.Now;
+            string dateString = today.ToString("yyyyMMdd");
+            int dateInt = Int32.Parse(dateString);
+
             modelBuilder.Entity<Feeder>()
                 .HasData(
                     new Feeder
                     {
                         FeederId = 1,
-                        Zipcode = 40204
+                        Zipcode = 40204,
+                        LastChangeDate = dateInt
                     }
                 );
         }

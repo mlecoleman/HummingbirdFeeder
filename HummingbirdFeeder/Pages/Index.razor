@@ -10,82 +10,92 @@
 
 @if (maxTemp != 0)
 {
-<h3>TempMax: @maxTemp</h3>
+    <h3>TempMax: @maxTemp</h3>
 }
 
 
 @if (ShowCreate)
 {
     <h3>Feeder Keeper</h3>
-        <div class="row">
-            <label for="ZipCode" class="col-4 col-form-label">Zip Code</label>
-            <div class="col-8">
-                <input id="ZipCode" name="ZipCode" type="text" class="form-control" @bind="@NewFeeder.Zipcode" />
-            </div>
+    <div class="row">
+        <label for="ZipCode" class="col-4 col-form-label">Zip Code</label>
+        <div class="col-8">
+            <input id="ZipCode" name="ZipCode" type="text" class="form-control" @bind="@NewFeeder.Zipcode" />
         </div>
-        <div class="form-group row">
-            <div class="offset-4 col-8">
-                <button name="submit" type="submit" class="btn btn-primary" @onclick="CreateNewFeeder">Be My Feeder Keeper!</button>
-            </div>
+    </div>
+    <div class="row">
+        <label for="LastChangeDate" class="col-4 col-form-label">Last Change Date</label>
+        <div class="col-8">
+            <input id="ZipCode" name="ZipCode" type="text" class="form-control" @bind="@NewFeeder.LastChangeDate" />
         </div>
+    </div>
+    <div class="form-group row">
+        <div class="offset-4 col-8">
+            <button name="submit" type="submit" class="btn btn-primary" @onclick="CreateNewFeeder">Be My Feeder Keeper!</button>
+        </div>
+    </div>
 }
 else
 {
-        <div class="form-group row">
-            <div class="offset-4 col-8">
-                <button name="submit" type="submit" class="btn btn-primary" @onclick="ShowCreateForm">Be My Feeder Keeper!</button>
-            </div>
+    <div class="form-group row">
+        <div class="offset-4 col-8">
+            <button name="submit" type="submit" class="btn btn-primary" @onclick="ShowCreateForm">Be My Feeder Keeper!</button>
         </div>
+    </div>
 
-        @if(MyFeeders is not null && MyFeeders.Count > 0)
-        {
-            <div class="table-responsive">
-                <table class="table table-striped table-hover table-bordered table-light border-dark">
-                    <thead>
-                        <tr>
-                            <th scope="col">ID</th>
-                            <th scope="col">Zip Code</th>
-                            <th scope="col">Edit</th>
-                            <th scope="col">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var feeder in MyFeeders)
+    @if (MyFeeders is not null && MyFeeders.Count > 0)
+    {
+        <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered table-light border-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">ID</th>
+                        <th scope="col">Zip Code</th>
+                        <th scope="col">Last Change Date</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var feeder in MyFeeders)
+                    {
+                        @if (!EditRecord)
                         {
-                            @if (!EditRecord)
+                            <tr>
+                                <th scope="row">@feeder.FeederId</th>
+                                <td>@feeder.Zipcode</td>
+                                <td>@feeder.LastChangeDate</td>
+                                <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => ShowEditForm(feeder)">Edit</button></td>
+                                <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => DeleteFeeder(feeder)">Delete</button></td>
+                            </tr>
+                        }
+                        else
+                        {
+                            if (@FeederToUpdate is not null && @FeederToUpdate.FeederId == @feeder.FeederId)
                             {
-                                <tr>
-                                    <th scope="row">@feeder.FeederId</th>
-                                    <td>@feeder.Zipcode</td>
-                                    <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => ShowEditForm(feeder)">Edit</button></td>
-                                    <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => DeleteFeeder(feeder)">Delete</button></td>
-                                </tr>
+                            <tr>
+                                <th scope="row">@feeder.FeederId</th>
+                                <td><input id="ZipCode" name="ZipCode" type="text" class="form-control" @bind="@FeederToUpdate.Zipcode" /></td>
+                                <td><input id="LastChangeDate" name="LastChangeDate" type="text" class="form-control" @bind="@FeederToUpdate.LastChangeDate" /></td>
+                                <td> <button name="submit" type="submit" class="btn btn-primary" @onclick="@UpdateFeeder">Save</button></td>
+                                <td></td>
+                            </tr>
                             }
                             else
                             {
-                                if (@FeederToUpdate is not null && @FeederToUpdate.FeederId == @feeder.FeederId)
-                                {
-                                    <tr>
-                                        <th scope="row">@feeder.FeederId</th>
-                                        <td><input id="ZipCode" name="ZipCode" type="text" class="form-control" @bind="@FeederToUpdate.Zipcode" /></td>
-                                        <td> <button name="submit" type="submit" class="btn btn-primary" @onclick="@UpdateFeeder">Save</button></td>
-                                        <td></td>
-                                    </tr>
-                                }
-                                else 
-                                {
-                                    <tr>
-                                        <th scope="row">@feeder.FeederId</th>
-                                        <td>@feeder.Zipcode</td>
-                                        <td> <button name="submit" type="submit" class="btn btn-primary" @onclick="() => ShowEditForm(feeder)">Edit</button></td>
-                                        <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => DeleteFeeder(feeder)">Delete</button></td>
-                                    </tr>
-                                }
+                            <tr>
+                                <th scope="row">@feeder.FeederId</th>
+                                <td>@feeder.Zipcode</td>
+                                <td>@feeder.LastChangeDate</td>
+                                <td> <button name="submit" type="submit" class="btn btn-primary" @onclick="() => ShowEditForm(feeder)">Edit</button></td>
+                                <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => DeleteFeeder(feeder)">Delete</button></td>
+                            </tr>
                             }
-
                         }
-                    </tbody>
-                </table>
-            </div>
-        }
+
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
 }

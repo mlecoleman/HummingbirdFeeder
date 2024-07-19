@@ -65,7 +65,6 @@ namespace HummingbirdFeeder.Pages
         }
 
         // Update
-
         public async Task ShowEditForm(Feeder myFeeder)
         {
             _context ??= await FeederDataContextFactory.CreateDbContextAsync();
@@ -86,7 +85,6 @@ namespace HummingbirdFeeder.Pages
         }
 
         // Delete
-
         public async Task DeleteFeeder(Feeder myFeeder)
         {
             _context ??= await FeederDataContextFactory.CreateDbContextAsync();
