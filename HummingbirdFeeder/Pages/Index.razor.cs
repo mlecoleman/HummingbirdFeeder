@@ -26,7 +26,9 @@ namespace HummingbirdFeeder.Pages
             BaseAddress = new Uri("http://api.weatherapi.com/")
         };
         public Forecastday forecastday;
-        public double maxTemp;
+        public List<string> datesSinceLastFeederChange = new List<string>();
+        public List<double> maxTemperaturesPerDay = new List<double>();
+        public bool changeFeeder;
 
         protected override async Task OnInitializedAsync()
         {
@@ -99,14 +101,12 @@ namespace HummingbirdFeeder.Pages
 
         // API and feeeder change logic
 
-        public async Task<List<string>> GetListOfDatesSinceLastChangeDate(Feeder myFeeder)
+        public async Task GetListOfDatesSinceLastChangeDate(Feeder myFeeder)
         {
-            List <string> datesSinceLastFeederChange = new List<string>();
-
             string lastChangeDate = (myFeeder.LastChangeDate).ToString();
-            DateTime changeDate = DateTime.ParseExact(lastChangeDate, "yyyy-MM-dd", CultureInfo.InvariantCulture);
+            DateTime changeDate = DateTime.ParseExact(lastChangeDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+
             DateTime today = (DateTime.Now.Date);
-            string formattedDate = today.ToString("yyyy-MM-dd");
 
             _context ??= await FeederDataContextFactory.CreateDbContextAsync();
             if (_context is not null)
@@ -117,40 +117,36 @@ namespace HummingbirdFeeder.Pages
                     datesSinceLastFeederChange.Add(dateString);
                 }
             }
-
-            return datesSinceLastFeederChange;
         }
 
-        public async Task<List<double>> GetListOfTemperatureMaxPerDate(Feeder myFeeder)
+        public async Task GetListOfTemperatureMaxPerDate(Feeder myFeeder)
         {
             string zipcode = (myFeeder.Zipcode).ToString();
             int lastChangeDate = myFeeder.LastChangeDate;
-            Task<List<string>> datesSinceLastFeederChange = GetListOfDatesSinceLastChangeDate(myFeeder);
             string todaysDate = DateTime.Now.ToString("yyyy-MM-dd");
             string key = "e44d36a439384f149d9182816241307";
-            List<double> maxTemperaturesPerDay = new List<double>();
             _context ??= await FeederDataContextFactory.CreateDbContextAsync();
             if (_context is not null)
             {
-                foreach (string date in await datesSinceLastFeederChange)
+                foreach (string date in datesSinceLastFeederChange)
                 {
                     string urlSuffix = $"v1/history.json?key={key}&q={zipcode}&dt={date}";
                     var response = await _client.GetAsync(urlSuffix);
                     var rawJson = await response.Content.ReadAsStringAsync();
                     Root rootObject = JsonSerializer.Deserialize<Root>(rawJson);
-                    maxTemp = rootObject.forecast.forecastday[0].day.maxtemp_f;
+                    var maxTemp = rootObject.forecast.forecastday[0].day.maxtemp_f;
                     maxTemperaturesPerDay.Add(maxTemp);
                 }
             }
-            return maxTemperaturesPerDay;
         }
 
-        public async Task<bool> DoesFeederNeedToBeChanged(Feeder myFeeder)
+        public async Task DoesFeederNeedToBeChanged(Feeder myFeeder)
         {
-            Task<List<double>> dailyHighTemps = GetListOfTemperatureMaxPerDate(myFeeder);
-            double maxTemp = (await dailyHighTemps).Max();
-            int daysSinceChange = (await dailyHighTemps).Count();
-            bool changeFeeder;
+            await GetListOfDatesSinceLastChangeDate(myFeeder);
+            await GetListOfTemperatureMaxPerDate(myFeeder);
+
+            double maxTemp = (maxTemperaturesPerDay).Max();
+            int daysSinceChange = datesSinceLastFeederChange.Count();
 
             if (maxTemp <= 70 && daysSinceChange >= 7) changeFeeder = true;
             else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) changeFeeder = true;
@@ -160,8 +156,6 @@ namespace HummingbirdFeeder.Pages
             else if (maxTemp > 88 && maxTemp <= 92 && daysSinceChange >= 2) changeFeeder = true;
             else if (maxTemp > 92 && daysSinceChange >= 1) changeFeeder = true;
             else changeFeeder = false;
-
-            return changeFeeder;
         }
     }
 }
