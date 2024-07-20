@@ -7,9 +7,6 @@ using System.Linq;
 using HummingbirdFeeder.Models;
 using System.Diagnostics;
 
-
-
-
 namespace HummingbirdFeeder.Pages
 {
     public partial class Index
@@ -25,10 +22,10 @@ namespace HummingbirdFeeder.Pages
         {
             BaseAddress = new Uri("http://api.weatherapi.com/")
         };
-        public Forecastday forecastday;
+        public Forecastday? forecastday { get; set; }
         public List<string> datesSinceLastFeederChange = new List<string>();
         public List<double> maxTemperaturesPerDay = new List<double>();
-        public bool changeFeeder;
+        //public bool changeFeeder;
 
         protected override async Task OnInitializedAsync()
         {
@@ -148,14 +145,14 @@ namespace HummingbirdFeeder.Pages
             double maxTemp = (maxTemperaturesPerDay).Max();
             int daysSinceChange = datesSinceLastFeederChange.Count();
 
-            if (maxTemp <= 70 && daysSinceChange >= 7) changeFeeder = true;
-            else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) changeFeeder = true;
-            else if (maxTemp > 75 && maxTemp <= 80 && daysSinceChange >= 5) changeFeeder = true;
-            else if (maxTemp > 80 && maxTemp <= 84 && daysSinceChange >= 4) changeFeeder = true;
-            else if (maxTemp > 84 && maxTemp <= 88 && daysSinceChange >= 3) changeFeeder = true;
-            else if (maxTemp > 88 && maxTemp <= 92 && daysSinceChange >= 2) changeFeeder = true;
-            else if (maxTemp > 92 && daysSinceChange >= 1) changeFeeder = true;
-            else changeFeeder = false;
+            if (maxTemp <= 70 && daysSinceChange >= 7) myFeeder.ChangeFeeder = true;
+            else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) myFeeder.ChangeFeeder = true;
+            else if (maxTemp > 75 && maxTemp <= 80 && daysSinceChange >= 5) myFeeder.ChangeFeeder = true;
+            else if (maxTemp > 80 && maxTemp <= 84 && daysSinceChange >= 4) myFeeder.ChangeFeeder = true;
+            else if (maxTemp > 84 && maxTemp <= 88 && daysSinceChange >= 3) myFeeder.ChangeFeeder = true;
+            else if (maxTemp > 88 && maxTemp <= 92 && daysSinceChange >= 2) myFeeder.ChangeFeeder = true;
+            else if (maxTemp > 92 && daysSinceChange >= 1) myFeeder.ChangeFeeder = true;
+            else myFeeder.ChangeFeeder = false;
         }
     }
 }

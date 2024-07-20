@@ -33,8 +33,10 @@ namespace HummingbirdFeeder.Data
                     new Feeder
                     {
                         FeederId = 1,
+                        FeederName = "My Feeder",
                         Zipcode = 40204,
-                        LastChangeDate = dateInt
+                        LastChangeDate = dateInt,
+                        ChangeFeeder = true
                     }
                 );
         }

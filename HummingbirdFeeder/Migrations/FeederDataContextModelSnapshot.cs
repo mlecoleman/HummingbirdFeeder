@@ -22,6 +22,12 @@ namespace HummingbirdFeeder.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<bool>("ChangeFeeder")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("FeederName")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("LastChangeDate")
                         .HasColumnType("INTEGER");
 
@@ -36,7 +42,9 @@ namespace HummingbirdFeeder.Migrations
                         new
                         {
                             FeederId = 1,
-                            LastChangeDate = 20240719,
+                            ChangeFeeder = true,
+                            FeederName = "My Feeder",
+                            LastChangeDate = 20240720,
                             Zipcode = 40204
                         });
                 });

@@ -17,15 +17,15 @@
         </div>
     </div>
     <div class="row">
-        <label for="LastChangeDate" class="col-4 col-form-label">Last Change Date</label>
+        <label for="FeederName" class="col-4 col-form-label">Feeder Name</label>
         <div class="col-8">
-            <input id="ZipCode" name="ZipCode" type="text" class="form-control" @bind="@NewFeeder.LastChangeDate" />
+            <input id="FeederName" name="FeederName" type="text" class="form-control" @bind="@NewFeeder.FeederName" />
         </div>
     </div>
     <div class="row">
-        <label for="ChangeFeeder" class="col-4 col-form-label">Do I Need To Change My Feeder?</label>
+        <label for="LastChangeDate" class="col-4 col-form-label">Last Change Date</label>
         <div class="col-8">
-            <input id="ChangeFeeder" name="ChangeFeeder" type="text" class="form-control" @bind="@NewFeeder.LastChangeDate" />
+            <input id="ZipCode" name="ZipCode" type="text" class="form-control" @bind="@NewFeeder.LastChangeDate" />
         </div>
     </div>
     <div class="form-group row">
@@ -38,7 +38,7 @@ else
 {
     <div class="form-group row">
         <div class="offset-4 col-8">
-            <button name="submit" type="submit" class="btn btn-primary" @onclick="ShowCreateForm">Be My Feeder Keeper!</button>
+            <button name="submit" type="submit" class="btn btn-primary" @onclick="ShowCreateForm">Add A New Feeder</button>
         </div>
     </div>
 
@@ -49,8 +49,10 @@ else
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
+                        <th scope="col">Feeder Name</th>
                         <th scope="col">Zip Code</th>
                         <th scope="col">Last Change Date</th>
+                        <th scope="col">Check Feeder Status</th>
                         <th scope="col">Do I Need To Change My Feeder?</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
@@ -63,9 +65,11 @@ else
                         {
                             <tr>
                                 <th scope="row">@feeder.FeederId</th>
+                                <td>@feeder.FeederName</td>
                                 <td>@feeder.Zipcode</td>
                                 <td>@feeder.LastChangeDate</td>
-                                <td><button name="submit" type="submit" class="btn btn-primary" @onload="() => DoesFeederNeedToBeChanged(feeder)">Change Feeder?</button>@changeFeeder</td>
+                                <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => DoesFeederNeedToBeChanged(feeder)">Change Feeder?</button></td>
+                                <td>@feeder.ChangeFeeder</td>
                                 <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => ShowEditForm(feeder)">Edit</button></td>
                                 <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => DeleteFeeder(feeder)">Delete</button></td>
                             </tr>
@@ -76,10 +80,12 @@ else
                             {
                                 <tr>
                                     <th scope="row">@feeder.FeederId</th>
+                                    <td><input id="FeederName" name="FeederName" type="text" class="form-control" @bind="@FeederToUpdate.FeederName" /></td>
                                     <td><input id="ZipCode" name="ZipCode" type="text" class="form-control" @bind="@FeederToUpdate.Zipcode" /></td>
                                     <td><input id="LastChangeDate" name="LastChangeDate" type="text" class="form-control" @bind="@FeederToUpdate.LastChangeDate" /></td>
-                                    <td>@changeFeeder</td>
-                                    <td> <button name="submit" type="submit" class="btn btn-primary" @onclick="@UpdateFeeder">Save</button></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><button name="submit" type="submit" class="btn btn-primary" @onclick="@UpdateFeeder">Save</button></td>
                                     <td></td>
                                 </tr>
                             }
@@ -87,10 +93,12 @@ else
                             {
                                 <tr>
                                     <th scope="row">@feeder.FeederId</th>
+                                    <td>@feeder.FeederName</td>
                                     <td>@feeder.Zipcode</td>
                                     <td>@feeder.LastChangeDate</td>
-                                    <td>@changeFeeder</td>
-                                    <td> <button name="submit" type="submit" class="btn btn-primary" @onclick="() => ShowEditForm(feeder)">Edit</button></td>
+                                    <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => DoesFeederNeedToBeChanged(feeder)">Change Feeder?</button></td>
+                                    <td>@feeder.ChangeFeeder</td>
+                                    <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => ShowEditForm(feeder)">Edit</button></td>
                                     <td><button name="submit" type="submit" class="btn btn-primary" @onclick="() => DeleteFeeder(feeder)">Delete</button></td>
                                 </tr>
                             }
