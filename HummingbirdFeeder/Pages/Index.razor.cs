@@ -12,20 +12,15 @@ namespace HummingbirdFeeder.Pages
     public partial class Index
     {
         public bool ShowCreate { get; set; }
-        public bool EditRecord { get; set; }
-        public int EditingId { get; set; }
         private FeederDataContext? _context;
-        public Feeder? NewFeeder { get; set; }
-        public Feeder? FeederToUpdate { get; set; }
         public List<Feeder>? MyFeeders { get; set; }
         private HttpClient _client = new HttpClient()
         {
             BaseAddress = new Uri("http://api.weatherapi.com/")
         };
-        public Forecastday? forecastday { get; set; }
         public List<string> datesSinceLastFeederChange = new List<string>();
         public List<double> maxTemperaturesPerDay = new List<double>();
-        //public bool changeFeeder;
+
 
         protected override async Task OnInitializedAsync()
         {
@@ -33,27 +28,6 @@ namespace HummingbirdFeeder.Pages
             await ShowFeeders();
         }
 
-        // Create
-        public void ShowCreateForm()
-        {
-            ShowCreate = true;
-            NewFeeder = new Feeder();
-        }
-
-        public async Task CreateNewFeeder()
-        {
-            _context ??= await FeederDataContextFactory.CreateDbContextAsync();
-
-            if (NewFeeder is not null)
-            {
-                _context?.Feeders.Add(NewFeeder);
-                _context?.SaveChangesAsync();
-            }
-            ShowCreate = false;
-            await ShowFeeders();
-        }
-
-        // Read
         public async Task ShowFeeders()
         {
             _context ??= await FeederDataContextFactory.CreateDbContextAsync();
@@ -61,26 +35,6 @@ namespace HummingbirdFeeder.Pages
             if (_context is not null)
             {
                 MyFeeders = await _context.Feeders.ToListAsync();
-            }
-        }
-
-        // Update
-        public async Task ShowEditForm(Feeder myFeeder)
-        {
-            _context ??= await FeederDataContextFactory.CreateDbContextAsync();
-            FeederToUpdate = _context.Feeders.FirstOrDefault(x => x.FeederId == myFeeder.FeederId);
-            EditingId = myFeeder.FeederId;
-            EditRecord = true;
-        }
-
-        public async Task UpdateFeeder()
-        {
-            EditRecord = false;
-            _context ??= await FeederDataContextFactory.CreateDbContextAsync();
-            if (_context is not null)
-            {
-                if (FeederToUpdate is not null) _context.Feeders.Update(FeederToUpdate);
-                await _context.SaveChangesAsync();
             }
         }
 
@@ -119,9 +73,7 @@ namespace HummingbirdFeeder.Pages
         public async Task GetListOfTemperatureMaxPerDate(Feeder myFeeder)
         {
             string zipcode = (myFeeder.Zipcode).ToString();
-            int lastChangeDate = myFeeder.LastChangeDate;
-            string todaysDate = DateTime.Now.ToString("yyyy-MM-dd");
-            string key = "e44d36a439384f149d9182816241307";
+            string key = "";
             _context ??= await FeederDataContextFactory.CreateDbContextAsync();
             if (_context is not null)
             {
