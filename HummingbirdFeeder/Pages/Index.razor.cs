@@ -105,6 +105,14 @@ namespace HummingbirdFeeder.Pages
             else if (maxTemp > 88 && maxTemp <= 92 && daysSinceChange >= 2) myFeeder.ChangeFeeder = true;
             else if (maxTemp > 92 && daysSinceChange >= 1) myFeeder.ChangeFeeder = true;
             else myFeeder.ChangeFeeder = false;
+
+            ResetChangeFeederLogic();
+        }
+
+        public async Task ResetChangeFeederLogic()
+        {
+            maxTemperaturesPerDay.Clear();
+            datesSinceLastFeederChange.Clear();
         }
     }
 }
