@@ -1,44 +1,64 @@
 ﻿@using Microsoft.EntityFrameworkCore;
 @using HummingbirdFeeder.Data;
+@using System.Globalization;
+
 
 @page "/"
 @inject IDbContextFactory<FeederDataContext> FeederDataContextFactory;
 
 <PageTitle>Feeder</PageTitle>
 
-<a href="/create" class="btn btn-success">Create</a>
-
-    @if (MyFeeders is not null && MyFeeders.Count > 0)
-    {
-        <div class="table-responsive">
-            <table class="table table-striped table-hover table-bordered table-light border-dark">
-                <thead>
+@if (MyFeeders is not null && MyFeeders.Count > 0)
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-hover table-bordered table-light border-dark">
+            <thead>
+                <tr>
+                    <th scope="col">Feeder Name</th>
+                    <th scope="col">Zip Code</th>
+                    <th scope="col">Last Change Date</th>
+                    <th scope="col">Check Feeder Status</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var feeder in MyFeeders)
+                {
                     <tr>
-                        <th scope="col">ID</th>
-                        <th scope="col">Feeder Name</th>
-                        <th scope="col">Zip Code</th>
-                        <th scope="col">Last Change Date</th>
-                        <th scope="col">Check Feeder Status</th>
-                        <th scope="col">Do I Need To Change My Feeder?</th>
-                        <th scope="col">Edit</th>
-                        <th scope="col">Delete</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var feeder in MyFeeders)
-                    {
-                    <tr>
-                        <th scope="row">@feeder.FeederId</th>
                         <td>@feeder.FeederName</td>
                         <td>@feeder.Zipcode</td>
-                        <td>@feeder.LastChangeDate</td>
-                        <td><button name="changeFeeder" type="submit" class="btn btn-primary" @onclick="() => DoesFeederNeedToBeChanged(feeder)">Change Feeder?</button></td>
-                        <td>@feeder.ChangeFeeder</td>
+                        <td>@ConvertToDate(feeder.LastChangeDate)</td>
+                        @if (feeder.ChangeFeeder == null)
+                        {
+                            <td>Calculating Beep Boop...</td>
+                        }
+                        else if (feeder.ChangeFeeder == true)
+                        {
+                            <td>Time to change this feeder!</td>
+                        }
+                        else
+                        {
+                            <td>No action needed!</td>
+                        }
                         <td><a href="/update/@feeder.FeederId" name="edit" type="submit" class="btn btn-warning">Edit</a></td>
                         <td><button name="delete" type="submit" class="btn btn-danger" @onclick="() => DeleteFeeder(feeder)">Delete</button></td>
                     </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a href="/create" class="btn btn-success">Add New Feeder</a>
+
+@code {
+    string ConvertToDate(int dateInt)
+    {
+        string dateString = dateInt.ToString();
+        DateTime date = DateTime.ParseExact(dateString, "yyyyMMdd", CultureInfo.InvariantCulture);
+        string formattedDate = date.ToString("MM-dd-yyyy");
+
+        return formattedDate;
     }
+}
