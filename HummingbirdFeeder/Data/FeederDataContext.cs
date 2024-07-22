@@ -34,7 +34,7 @@ namespace HummingbirdFeeder.Data
                     {
                         FeederId = 1,
                         FeederName = "My Feeder",
-                        Zipcode = 40204,
+                        Zipcode = "40204",
                         LastChangeDate = dateInt,
                         ChangeFeeder = true
                     }

@@ -12,7 +12,7 @@ namespace HummingbirdFeeder.Data
 		public string? FeederName { get; set; }
 		[Required]
 		[MaxLength(5)]
-        public int Zipcode { get; set; }
+        public string Zipcode { get; set; }
         [MaxLength(8)]
         public int LastChangeDate { get; set; }
         public bool? ChangeFeeder { get; set; }

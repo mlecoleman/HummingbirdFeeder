@@ -34,9 +34,10 @@ namespace HummingbirdFeeder.Migrations
                         .HasMaxLength(8)
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Zipcode")
+                    b.Property<string>("Zipcode")
+                        .IsRequired()
                         .HasMaxLength(5)
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("TEXT");
 
                     b.HasKey("FeederId");
 
@@ -48,8 +49,8 @@ namespace HummingbirdFeeder.Migrations
                             FeederId = 1,
                             ChangeFeeder = true,
                             FeederName = "My Feeder",
-                            LastChangeDate = 20240721,
-                            Zipcode = 40204
+                            LastChangeDate = 20240722,
+                            Zipcode = "40204"
                         });
                 });
 #pragma warning restore 612, 618
