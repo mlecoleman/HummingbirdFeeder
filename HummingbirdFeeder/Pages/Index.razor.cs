@@ -11,7 +11,6 @@ namespace HummingbirdFeeder.Pages
 {
     public partial class Index
     {
-        public bool ShowCreate { get; set; }
         private FeederDataContext? _context;
         public List<Feeder>? MyFeeders { get; set; }
         private HttpClient _client = new HttpClient()
@@ -24,8 +23,15 @@ namespace HummingbirdFeeder.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            ShowCreate = false;
             await ShowFeeders();
+            foreach (var feeder in MyFeeders)
+            {
+                feeder.ChangeFeeder = null;
+            }
+            foreach (var feeder in MyFeeders)
+            {
+                await DoesFeederNeedToBeChanged(feeder);
+            }
         }
 
         public async Task ShowFeeders()
@@ -52,9 +58,9 @@ namespace HummingbirdFeeder.Pages
 
         // API and feeeder change logic
 
-        public async Task GetListOfDatesSinceLastChangeDate(Feeder myFeeder)
+        public async Task GetListOfDatesSinceLastChangeDate(Feeder feeder)
         {
-            string lastChangeDate = (myFeeder.LastChangeDate).ToString();
+            string lastChangeDate = (feeder.LastChangeDate).ToString();
             DateTime changeDate = DateTime.ParseExact(lastChangeDate, "yyyyMMdd", CultureInfo.InvariantCulture);
 
             DateTime today = (DateTime.Now.Date);
@@ -70,10 +76,10 @@ namespace HummingbirdFeeder.Pages
             }
         }
 
-        public async Task GetListOfTemperatureMaxPerDate(Feeder myFeeder)
+        public async Task GetListOfTemperatureMaxPerDate(Feeder feeder)
         {
-            string zipcode = (myFeeder.Zipcode).ToString();
-            string key = "";
+            string zipcode = feeder.Zipcode;
+            string key = "3b850edaec1f499cbc8163535242107";
             _context ??= await FeederDataContextFactory.CreateDbContextAsync();
             if (_context is not null)
             {
@@ -89,27 +95,27 @@ namespace HummingbirdFeeder.Pages
             }
         }
 
-        public async Task DoesFeederNeedToBeChanged(Feeder myFeeder)
+        public async Task DoesFeederNeedToBeChanged(Feeder feeder)
         {
-            await GetListOfDatesSinceLastChangeDate(myFeeder);
-            await GetListOfTemperatureMaxPerDate(myFeeder);
+            await GetListOfDatesSinceLastChangeDate(feeder);
+            await GetListOfTemperatureMaxPerDate(feeder);
 
             double maxTemp = (maxTemperaturesPerDay).Max();
             int daysSinceChange = datesSinceLastFeederChange.Count();
 
-            if (maxTemp <= 70 && daysSinceChange >= 7) myFeeder.ChangeFeeder = true;
-            else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) myFeeder.ChangeFeeder = true;
-            else if (maxTemp > 75 && maxTemp <= 80 && daysSinceChange >= 5) myFeeder.ChangeFeeder = true;
-            else if (maxTemp > 80 && maxTemp <= 84 && daysSinceChange >= 4) myFeeder.ChangeFeeder = true;
-            else if (maxTemp > 84 && maxTemp <= 88 && daysSinceChange >= 3) myFeeder.ChangeFeeder = true;
-            else if (maxTemp > 88 && maxTemp <= 92 && daysSinceChange >= 2) myFeeder.ChangeFeeder = true;
-            else if (maxTemp > 92 && daysSinceChange >= 1) myFeeder.ChangeFeeder = true;
-            else myFeeder.ChangeFeeder = false;
+            if (maxTemp <= 70 && daysSinceChange >= 7) feeder.ChangeFeeder = true;
+            else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) feeder.ChangeFeeder = true;
+            else if (maxTemp > 75 && maxTemp <= 80 && daysSinceChange >= 5) feeder.ChangeFeeder = true;
+            else if (maxTemp > 80 && maxTemp <= 84 && daysSinceChange >= 4) feeder.ChangeFeeder = true;
+            else if (maxTemp > 84 && maxTemp <= 88 && daysSinceChange >= 3) feeder.ChangeFeeder = true;
+            else if (maxTemp > 88 && maxTemp <= 92 && daysSinceChange >= 2) feeder.ChangeFeeder = true;
+            else if (maxTemp > 92 && daysSinceChange >= 1) feeder.ChangeFeeder = true;
+            else feeder.ChangeFeeder = false;
 
             ResetChangeFeederLogic();
         }
 
-        public async Task ResetChangeFeederLogic()
+        public void ResetChangeFeederLogic()
         {
             maxTemperaturesPerDay.Clear();
             datesSinceLastFeederChange.Clear();
