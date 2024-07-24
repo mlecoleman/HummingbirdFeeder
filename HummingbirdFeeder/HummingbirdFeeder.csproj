@@ -24,15 +24,12 @@
   <ItemGroup>
     <None Remove="Models\" />
     <None Remove="Pages\CRUD\" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Data\Feeder.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Remove="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
     <Folder Include="Pages\CRUD\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Data\FeederDataContext.cs">
