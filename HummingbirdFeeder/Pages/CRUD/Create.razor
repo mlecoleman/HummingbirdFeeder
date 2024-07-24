@@ -1,0 +1,56 @@
+﻿@page "/create"
+@using HummingbirdFeeder.Data;
+@using Microsoft.EntityFrameworkCore;
+@using System.Globalization;
+@using System.ComponentModel.DataAnnotations
+
+@inject IDbContextFactory<FeederDataContext> FeederDataContextFactory;
+
+
+<h1>Add New Feeder @NewFeeder.FeederName</h1>
+
+<EditForm Model="NewFeeder" OnValidSubmit="CreateFeeder">
+    @*<DataAnnotationsValidator />
+        <ValidationSummary />*@
+
+    <div class="form-group mb-3">
+        <label for="feederName">Feeder Name</label>
+        <InputText @bind-Value="NewFeeder.FeederName" class="form-control" id="feederName" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="feederZipcode">Zip Code</label>
+        <InputText @bind-Value="NewFeeder.Zipcode" class="form-control" id="feederZipcode" pattern="\d{5}" />
+        <ValidationMessage For="@(() => NewFeeder.Zipcode)" />
+    </div>
+
+    <div class="form-group mb-3">
+        <label for="feederChangeDate">Last Date Feeder Was Changed</label>
+        <InputDate @bind-Value="LastChangeDate" class="form-control" id="feederLastChangeDate" />
+        <ValidationMessage For="@(() => LastChangeDate)" />
+        @if (LastChangeDate < DateTime.Now.AddDays(-7))
+        {
+            <div class="alert alert-danger" role="alert">
+                Never leave your feeder unchanged for more than 1 week!!!
+            </div>
+        }
+    </div>
+
+    <button class="btn btn-success" type="submit">Save</button>
+    <button class="btn btn-secondary" type="button" @onclick="@(() => navigationManager.NavigateTo("/"))">Cancel</button>
+
+</EditForm>
+
+@code {
+    private DateTime LastChangeDate
+    {
+        get
+        {
+            return DateTime.ParseExact(NewFeeder.LastChangeDate.ToString(), "yyyyMMdd", CultureInfo.InvariantCulture);
+        }
+        set
+        {
+            NewFeeder.LastChangeDate = int.Parse(value.ToString("yyyyMMdd"));
+        }
+    }
+}

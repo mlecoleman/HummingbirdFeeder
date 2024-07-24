@@ -1,0 +1,59 @@
+﻿@page "/update/{feederId}"
+@using HummingbirdFeeder.Data;
+@using Microsoft.EntityFrameworkCore;
+@using System.Globalization;
+@using Microsoft.AspNetCore.Components;
+
+@inject IDbContextFactory<FeederDataContext> FeederDataContextFactory;
+
+@if (FeederToUpdate == null)
+{
+    <h1>Loading...</h1>
+}
+else
+{
+    <h1>Update Feeder "@FeederToUpdate.FeederName"</h1>
+
+    <EditForm Model="FeederToUpdate" OnValidSubmit="UpdateFeeder">
+
+        <div class="form-group mb-3">
+            <label for="feederName">Feeder Name</label>
+            <InputText @bind-Value="FeederToUpdate.FeederName" class="form-control" id="feederName" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="feederZipcode">Zip Code</label>
+            <InputText @bind-Value="FeederToUpdate.Zipcode" class="form-control" id="feederZipcode" pattern="\d{5}" />
+            <ValidationMessage For="@(() => FeederToUpdate.Zipcode)" />
+        </div>
+
+        <div class="form-group mb-3">
+            <label for="feederChangeDate">Last Date Feeder Was Changed</label>
+            <InputDate @bind-Value="LastChangeDate" class="form-control" id="feederLastChangeDate" />
+            <ValidationMessage For="@(() => LastChangeDate)" />
+            @if (LastChangeDate < DateTime.Now.AddDays(-7))
+            {
+                <div class="alert alert-danger" role="alert">
+                    Never leave your feeder unchanged for more than 1 week!!!
+                </div>
+            }
+        </div>
+
+        <button class="btn btn-success" type="submit">Save</button>
+        <button class="btn btn-secondary" @onclick="@(() => navigationManager.NavigateTo("/"))">Cancel</button>
+    </EditForm>
+}
+
+@code {
+    private DateTime LastChangeDate
+    {
+        get
+        {
+            return DateTime.ParseExact(FeederToUpdate.LastChangeDate.ToString(), "yyyyMMdd", CultureInfo.InvariantCulture);
+        }
+        set
+        {
+            FeederToUpdate.LastChangeDate = int.Parse(value.ToString("yyyyMMdd"));
+        }
+    }
+}
