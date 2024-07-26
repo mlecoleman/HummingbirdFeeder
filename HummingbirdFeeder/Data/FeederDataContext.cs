@@ -14,7 +14,7 @@ namespace HummingbirdFeeder.Data
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite(Configuration.GetConnectionString("Data Source=Data/Feeders.db"));
+            optionsBuilder.UseSqlite(Configuration.GetConnectionString("FeederDB"));
         }
 
         public DbSet<Feeder> Feeders { get; set; }
