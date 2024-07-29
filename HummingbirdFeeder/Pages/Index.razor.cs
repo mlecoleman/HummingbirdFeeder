@@ -43,15 +43,20 @@ namespace HummingbirdFeeder.Pages
             }
         }
 
+        public string ConvertToDate(int dateInt)
+        {
+            string dateString = dateInt.ToString();
+            DateTime date = DateTime.ParseExact(dateString, "yyyyMMdd", CultureInfo.InvariantCulture);
+            string formattedDate = date.ToString("MM-dd-yyyy");
+
+            return formattedDate;
+        }
+
         // Delete
         public async Task DeleteFeeder(Feeder myFeeder)
         {
-            //_context ??= await ContextFactory.CreateDbContextAsync();
-            //if (_context is not null)
-            {
-                if (myFeeder is not null) _context.Feeders.Remove(myFeeder);
-                await _context.SaveChangesAsync();
-            }
+            if (myFeeder is not null) _context.Feeders.Remove(myFeeder);
+            await _context.SaveChangesAsync();
             await ShowFeeders();
         }
 
