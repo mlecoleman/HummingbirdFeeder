@@ -1,16 +1,16 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using HummingbirdFeeder.Data;
 using System.Text.Json;
 using System.Globalization;
-using System.Linq;
 using HummingbirdFeeder.Models;
-using System.Diagnostics;
+using Microsoft.AspNetCore.Components;
 
 namespace HummingbirdFeeder.Pages
 {
     public partial class Index
     {
+        [Inject]
+        private IDbContextFactory<FeederDataContext> ContextFactory { get; set; }
         private FeederDataContext? _context;
         public List<Feeder>? MyFeeders { get; set; }
         private HttpClient _client = new HttpClient()
@@ -19,7 +19,6 @@ namespace HummingbirdFeeder.Pages
         };
         public List<string> datesSinceLastFeederChange = new List<string>();
         public List<double> maxTemperaturesPerDay = new List<double>();
-
 
         protected override async Task OnInitializedAsync()
         {
@@ -36,7 +35,7 @@ namespace HummingbirdFeeder.Pages
 
         public async Task ShowFeeders()
         {
-            _context ??= await FeederDataContextFactory.CreateDbContextAsync();
+            _context ??= await ContextFactory.CreateDbContextAsync();
 
             if (_context is not null)
             {
@@ -47,8 +46,8 @@ namespace HummingbirdFeeder.Pages
         // Delete
         public async Task DeleteFeeder(Feeder myFeeder)
         {
-            _context ??= await FeederDataContextFactory.CreateDbContextAsync();
-            if (_context is not null)
+            //_context ??= await ContextFactory.CreateDbContextAsync();
+            //if (_context is not null)
             {
                 if (myFeeder is not null) _context.Feeders.Remove(myFeeder);
                 await _context.SaveChangesAsync();
@@ -65,24 +64,24 @@ namespace HummingbirdFeeder.Pages
 
             DateTime today = (DateTime.Now.Date);
 
-            _context ??= await FeederDataContextFactory.CreateDbContextAsync();
-            if (_context is not null)
-            {
+            //_context ??= await ContextFactory.CreateDbContextAsync();
+            //if (_context is not null)
+            //{
                 for (DateTime date = changeDate; date <= today; date = date.AddDays(1))
                 {
                     string dateString = date.ToString("yyyy-MM-dd");
                     datesSinceLastFeederChange.Add(dateString);
                 }
-            }
+            //}
         }
 
         public async Task GetListOfTemperatureMaxPerDate(Feeder feeder)
         {
             string zipcode = feeder.Zipcode;
             string key = "3b850edaec1f499cbc8163535242107";
-            _context ??= await FeederDataContextFactory.CreateDbContextAsync();
-            if (_context is not null)
-            {
+            //_context ??= await ContextFactory.CreateDbContextAsync();
+            //if (_context is not null)
+            //{
                 foreach (string date in datesSinceLastFeederChange)
                 {
                     string urlSuffix = $"v1/history.json?key={key}&q={zipcode}&dt={date}";
@@ -92,7 +91,7 @@ namespace HummingbirdFeeder.Pages
                     var maxTemp = rootObject.forecast.forecastday[0].day.maxtemp_f;
                     maxTemperaturesPerDay.Add(maxTemp);
                 }
-            }
+            //}
         }
 
         public async Task DoesFeederNeedToBeChanged(Feeder feeder)
