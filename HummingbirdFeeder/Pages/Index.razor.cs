@@ -69,34 +69,34 @@ namespace HummingbirdFeeder.Pages
 
             DateTime today = (DateTime.Now.Date);
 
-            //_context ??= await ContextFactory.CreateDbContextAsync();
-            //if (_context is not null)
-            //{
-                for (DateTime date = changeDate; date <= today; date = date.AddDays(1))
-                {
-                    string dateString = date.ToString("yyyy-MM-dd");
-                    datesSinceLastFeederChange.Add(dateString);
-                }
-            //}
+            for (DateTime date = changeDate; date <= today; date = date.AddDays(1))
+            {
+                string dateString = date.ToString("yyyy-MM-dd");
+                datesSinceLastFeederChange.Add(dateString);
+            }
         }
 
         public async Task GetListOfTemperatureMaxPerDate(Feeder feeder)
         {
             string zipcode = feeder.Zipcode;
+
+            foreach (string date in datesSinceLastFeederChange)
+            {
+                double maxTemp = await GetTempMaxPerDayFromWeatherApi(zipcode, date);
+                maxTemperaturesPerDay.Add(maxTemp);
+            }
+
+        }
+
+        public async Task<double> GetTempMaxPerDayFromWeatherApi(string zipcode, string date)
+        {
             string key = "3b850edaec1f499cbc8163535242107";
-            //_context ??= await ContextFactory.CreateDbContextAsync();
-            //if (_context is not null)
-            //{
-                foreach (string date in datesSinceLastFeederChange)
-                {
-                    string urlSuffix = $"v1/history.json?key={key}&q={zipcode}&dt={date}";
-                    var response = await _client.GetAsync(urlSuffix);
-                    var rawJson = await response.Content.ReadAsStringAsync();
-                    Root rootObject = JsonSerializer.Deserialize<Root>(rawJson);
-                    var maxTemp = rootObject.forecast.forecastday[0].day.maxtemp_f;
-                    maxTemperaturesPerDay.Add(maxTemp);
-                }
-            //}
+            string urlSuffix = $"v1/history.json?key={key}&q={zipcode}&dt={date}";
+            var response = await _client.GetAsync(urlSuffix);
+            var rawJson = await response.Content.ReadAsStringAsync();
+            Root rootObject = JsonSerializer.Deserialize<Root>(rawJson);
+            var maxTemp = rootObject.forecast.forecastday[0].day.maxtemp_f;
+            return maxTemp;
         }
 
         public async Task DoesFeederNeedToBeChanged(Feeder feeder)
@@ -126,4 +126,3 @@ namespace HummingbirdFeeder.Pages
         }
     }
 }
-
