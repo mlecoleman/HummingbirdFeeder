@@ -51,14 +51,3 @@
 }
 
 <a href="/create" class="btn btn-success">Add New Feeder</a>
-
-@code {
-    string ConvertToDate(int dateInt)
-    {
-        string dateString = dateInt.ToString();
-        DateTime date = DateTime.ParseExact(dateString, "yyyyMMdd", CultureInfo.InvariantCulture);
-        string formattedDate = date.ToString("MM-dd-yyyy");
-
-        return formattedDate;
-    }
-}
