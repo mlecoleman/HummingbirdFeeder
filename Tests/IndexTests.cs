@@ -35,7 +35,7 @@ public class IndexTests
         // Act - Logic runs to see how many days in the past from today the feeder was changed
         await component.GetListOfDatesSinceLastChangeDate(feeder);
 
-        // Assert - The list of days since last change shoud have 6 dates (zero based to 5)
+        // Assert - The list of days since last change shoud have 6 dates (zero based)
         var dates = component.datesSinceLastFeederChange;
         Assert.That(component.datesSinceLastFeederChange.Count, Is.EqualTo(6));
     }
@@ -43,31 +43,31 @@ public class IndexTests
     [Test]
     public async Task TestApiReturnsValueInRealisticTempRange()
     {
-        //Arrange - A feeder was changes 5 days in the past
+        //Arrange - A feeder has a valid zip code and recent date
         using var ctx = new Bunit.TestContext();
         var component = new IndexPage();
         string zipcode = "40202";
         string date = DateTime.Now.ToString("yyyy-MM-dd");
 
-        // Act - Logic runs to see how many days in the past from today the feeder was changed
+        // Act - A request is sent to weatherapi.com
         double maxTemp = await component.GetTempMaxPerDayFromWeatherApi(zipcode, date);
 
-        // Assert - The list of days since last change shoud have 6 dates (zero based to 5)
+        // Assert - The double returned is within possible temperatures on earth
         Assert.That(maxTemp, Is.InRange(-130, 135));
     }
 
     [Test]
-    public void TestConverToDateMethod()
+    public void TestConvertDateMethod()
     {
-        //Arrange - A feeder was changes 5 days in the past
+        //Arrange - A an int date is in format yyyymmdd
         using var ctx = new Bunit.TestContext();
         var component = new IndexPage();
         int date = 19810904;
 
-        // Act - Logic runs to see how many days in the past from today the feeder was changed
+        // Act - logic run to convert int format to user friendly format
         string formattedDate = component.ConvertToDate(date);
 
-        // Assert - The list of days since last change shoud have 6 dates (zero based to 5)
+        // Assert - The date is now a string in format "mm-dd-yyyy"
         Assert.That(formattedDate == "09-04-1981");
     }
 }
