@@ -30,10 +30,18 @@
     <Folder Include="Models\" />
     <Folder Include="Pages\CRUD\" />
     <Folder Include="Migrations\" />
+    <Folder Include="wwwroot\Images\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Update="Data\FeederDataContext.cs">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="wwwroot\Images\HummingBird.jpg" />
+    <Content Remove="wwwroot\Images\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="wwwroot\Images\HummingBird.jpg" />
   </ItemGroup>
 </Project>
