@@ -1,7 +1,7 @@
 # Hummingbird Feeder App
 
 ## Context and General Description
-If you've never kept a hummingbird feeder before you may not be aware, but the sugar water must be changed out regularly to keep pathogens from growing.  In the past I've used a manual process to see if I need to change my feeder that involves keeping track of daily temperature highs.  I'm terrible at keeping track of this and end up changing the feeder more frequently than I probably need to just to be safe.  Here's the chart I would use every day to help me figure out if my Hummingbird Feeder needed changing:
+If you've never kept a hummingbird feeder before you may not be aware, but the sugar water must be changed out regularly to keep pathogens from growing.  In the past I've used a manual process to see if I need to change my feeder that involves keeping track of daily temperature highs.  I'm terrible at keeping track of this and end up changing the feeder more frequently than I probably need to just to be safe.  Here's the chart I would use every day (when I could remember to actually use it) to help me figure out if my Hummingbird Feeder needed changing:
 
 ![alt text](https://i.pinimg.com/originals/ea/ac/08/eaac08f6afd61debc79bc2ea720b5a87.jpg)
 
@@ -17,18 +17,18 @@ SQLite
 
 To run the app it should be able to be cloned locally, and as long as you have .NET 7.0 you should be able to run it from your IDE and the Blazor page should open.  In case any dependencies need to be manually added, here is everything this project is currently referencing:
 
-Microsoft.EntityFrameworkCore.Sqlite Version 7.0.20
-Microsoft.EntityFrameworkCore.Tools Version 7.0.20
-Microsoft.EntityFrameworkCore.Design Version 7.0.20
-Microsoft.EntityFrameworkCore Version 7.0.20
-Microsoft.NET.Test.Sdk Version 17.5.0 
-NUnit Version 3.13.3
-NUnit3TestAdapter Version 4.2.1
-NUnit.Analyzers Version 3.6.1
-coverlet.collector Version 3.2.0
-bunit.web Version 1.30.3
-bunit Version 1.30.3
-FluentAssertions Version=6.12.0
+Microsoft.EntityFrameworkCore.Sqlite Version 7.0.20 <br/>
+Microsoft.EntityFrameworkCore.Tools Version 7.0.20 <br/>
+Microsoft.EntityFrameworkCore.Design Version 7.0.20 <br/>
+Microsoft.EntityFrameworkCore Version 7.0.20 <br/>
+Microsoft.NET.Test.Sdk Version 17.5.0 <br/>
+NUnit Version 3.13.3 <br/>
+NUnit3TestAdapter Version 4.2.1 <br/>
+NUnit.Analyzers Version 3.6.1 <br/>
+coverlet.collector Version 3.2.0 <br/>
+bunit.web Version 1.30.3 <br/>
+bunit Version 1.30.3 <br/>
+FluentAssertions Version=6.12.0 <br/>
 
 ## Requirements & How They Are Met
 
