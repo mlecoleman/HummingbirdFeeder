@@ -1,8 +1,6 @@
 ﻿@page "/update/{feederId}"
 @using HummingbirdFeeder.Data;
 @using Microsoft.EntityFrameworkCore;
-@using System.Globalization;
-@using Microsoft.AspNetCore.Components;
 
 @inject IDbContextFactory<FeederDataContext> FeederDataContextFactory;
 
@@ -23,8 +21,14 @@ else
 
         <div class="form-group mb-3">
             <label for="feederZipcode">Zip Code (Must be 5 digits)</label>
-            <InputText @bind-Value="FeederToUpdate.Zipcode" class="form-control" id="feederZipcode" pattern="\d{5}" @oninput="ValidateForm"/>
+            <InputText @bind-Value="FeederToUpdate.Zipcode" class="form-control" id="feederZipcode" pattern="\d{5}" @oninput="ValidateForm" />
             <ValidationMessage For="@(() => FeederToUpdate.Zipcode)" />
+            @if (!IsZipcodeValid)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @ZipcodeErrorMessage
+                </div>
+            }
         </div>
 
         <div class="form-group mb-3">
@@ -34,7 +38,7 @@ else
             @if (IsDateInFuture)
             {
                 <div class="alert alert-warning" role="alert">
-                    Are you from the future!? Please enter either today's date or a date in the past.
+                    What are you from the future!? Please enter either today's date or a date in the past.
                 </div>
             }
         </div>

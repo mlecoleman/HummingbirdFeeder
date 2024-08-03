@@ -1,11 +1,8 @@
 ﻿@page "/create"
 @using HummingbirdFeeder.Data;
 @using Microsoft.EntityFrameworkCore;
-@using System.Globalization;
-@using System.ComponentModel.DataAnnotations
 
 @inject IDbContextFactory<FeederDataContext> FeederDataContextFactory;
-
 
 <h1>Add New Feeder</h1>
 
@@ -13,13 +10,19 @@
 
     <div class="form-group mb-3">
         <label for="feederName">Feeder Name</label>
-        <InputText @bind-Value="NewFeeder.FeederName" class="form-control" id="feederName"/>
+        <InputText @bind-Value="NewFeeder.FeederName" class="form-control" id="feederName" />
     </div>
 
     <div class="form-group mb-3">
         <label for="feederZipcode">Zip Code (Must be 5 digits)</label>
-        <InputText @bind-Value="NewFeeder.Zipcode" class="form-control" id="feederZipcode" pattern="\d{5}" @oninput="ValidateForm"/>
+        <InputText @bind-Value="NewFeeder.Zipcode" class="form-control" id="feederZipcode" pattern="\d{5}" @oninput="ValidateForm" />
         <ValidationMessage For="@(() => NewFeeder.Zipcode)" />
+        @if (!IsZipcodeValid)
+        {
+            <div class="alert alert-danger" role="alert">
+                @ZipcodeErrorMessage
+            </div>
+        }
     </div>
 
     <div class="form-group mb-3">
@@ -29,11 +32,10 @@
         @if (IsDateInFuture)
         {
             <div class="alert alert-warning" role="alert">
-                Are you from the future!? Please enter either today's date or a date in the past.
+                What are you from the future!? Please enter either today's date or a date in the past.
             </div>
         }
     </div>
     <button class="btn btn-success" type="submit" disabled=@IsSaveDisabled>Save</button>
     <button class="btn btn-secondary" type="button" @onclick="@(() => navigationManager.NavigateTo("/"))">Cancel</button>
-
 </EditForm>

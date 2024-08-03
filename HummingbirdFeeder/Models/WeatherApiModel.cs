@@ -35,5 +35,16 @@ namespace HummingbirdFeeder.Models
         public Forecast forecast { get; set; }
     }
 
+    public class WeatherApiErrorResponse
+    {
+        public WeatherApiError error { get; set; }
+    }
+
+    public class WeatherApiError
+    {
+        public int code { get; set; }
+        public string message { get; set; }
+    }
+
 }
 
