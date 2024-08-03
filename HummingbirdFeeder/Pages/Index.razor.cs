@@ -115,5 +115,21 @@ namespace HummingbirdFeeder.Pages
                 else feeder.ChangeFeeder = false;
             }
         }
+
+        public async Task ChangeFeederToday(Feeder feeder)
+        {
+            feeder.LastChangeDate = int.Parse(DateTime.Now.ToString("yyyyMMdd"));
+            await _context.SaveChangesAsync();
+            ResetChangeFeederLogic(feeder);
+            string lastChangeDate = (feeder.LastChangeDate).ToString();
+            DateTime changeDate = DateTime.ParseExact(lastChangeDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+            bool changeDateIsOlderThanOneWeek = (DateTime.Now - changeDate).TotalDays >= 7;
+            await DoesFeederNeedToBeChanged(feeder, changeDateIsOlderThanOneWeek);
+        }
+
+        public void ResetChangeFeederLogic(Feeder feeder)
+        {
+            feederData[feeder].Clear();
+        }
     }
 }
