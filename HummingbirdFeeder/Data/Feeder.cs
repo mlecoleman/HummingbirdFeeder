@@ -10,7 +10,7 @@ namespace HummingbirdFeeder.Data
 		public int FeederId { get; set;}
 		[MaxLength(128)]
 		public string? FeederName { get; set; }
-		[Required]
+		[Required(ErrorMessage = "Zipcode is required!")]
 		[MaxLength(5)]
         public string Zipcode { get; set; }
         [MaxLength(8)]

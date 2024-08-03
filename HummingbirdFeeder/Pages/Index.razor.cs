@@ -29,7 +29,10 @@ namespace HummingbirdFeeder.Pages
             }
             foreach (var feeder in MyFeeders)
             {
-                await DoesFeederNeedToBeChanged(feeder);
+                string lastChangeDate = (feeder.LastChangeDate).ToString();
+                DateTime changeDate = DateTime.ParseExact(lastChangeDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                bool changeDateIsOlderThanOneWeek = (DateTime.Now - changeDate).TotalDays >= 7;
+                await DoesFeederNeedToBeChanged(feeder, changeDateIsOlderThanOneWeek);
             }
         }
 
@@ -99,23 +102,29 @@ namespace HummingbirdFeeder.Pages
             return maxTemp;
         }
 
-        public async Task DoesFeederNeedToBeChanged(Feeder feeder)
+        public async Task DoesFeederNeedToBeChanged(Feeder feeder, bool isChangeDateOlderThanOneWeek)
         {
-            await GetListOfDatesSinceLastChangeDate(feeder);
-            await GetListOfTemperatureMaxPerDate(feeder);
+            if (isChangeDateOlderThanOneWeek)
+            {
+                feeder.ChangeFeeder = true;
+            }
+            else
+            {
+                await GetListOfDatesSinceLastChangeDate(feeder);
+                await GetListOfTemperatureMaxPerDate(feeder);
 
-            double maxTemp = (maxTemperaturesPerDay).Max();
-            int daysSinceChange = datesSinceLastFeederChange.Count();
+                double maxTemp = (maxTemperaturesPerDay).Max();
+                int daysSinceChange = datesSinceLastFeederChange.Count();
 
-            if (maxTemp <= 70 && daysSinceChange >= 7) feeder.ChangeFeeder = true;
-            else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) feeder.ChangeFeeder = true;
-            else if (maxTemp > 75 && maxTemp <= 80 && daysSinceChange >= 5) feeder.ChangeFeeder = true;
-            else if (maxTemp > 80 && maxTemp <= 84 && daysSinceChange >= 4) feeder.ChangeFeeder = true;
-            else if (maxTemp > 84 && maxTemp <= 88 && daysSinceChange >= 3) feeder.ChangeFeeder = true;
-            else if (maxTemp > 88 && maxTemp <= 92 && daysSinceChange >= 2) feeder.ChangeFeeder = true;
-            else if (maxTemp > 92 && daysSinceChange >= 1) feeder.ChangeFeeder = true;
-            else feeder.ChangeFeeder = false;
-
+                if (maxTemp <= 70 && daysSinceChange >= 7) feeder.ChangeFeeder = true;
+                else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) feeder.ChangeFeeder = true;
+                else if (maxTemp > 75 && maxTemp <= 80 && daysSinceChange >= 5) feeder.ChangeFeeder = true;
+                else if (maxTemp > 80 && maxTemp <= 84 && daysSinceChange >= 4) feeder.ChangeFeeder = true;
+                else if (maxTemp > 84 && maxTemp <= 88 && daysSinceChange >= 3) feeder.ChangeFeeder = true;
+                else if (maxTemp > 88 && maxTemp <= 92 && daysSinceChange >= 2) feeder.ChangeFeeder = true;
+                else if (maxTemp > 92 && daysSinceChange >= 1) feeder.ChangeFeeder = true;
+                else feeder.ChangeFeeder = false;
+            }
             ResetChangeFeederLogic();
         }
 
