@@ -41,9 +41,6 @@ namespace HummingbirdFeeder.Pages.CRUD
             {
                 if (FeederToUpdate is not null)
                 {
-                    FeederToUpdate.FeederName = TempFeeder.FeederName;
-                    FeederToUpdate.Zipcode = TempFeeder.Zipcode;
-                    FeederToUpdate.LastChangeDate = TempFeeder.LastChangeDate;
                     _context.Feeders.Update(FeederToUpdate);
                 }
                 await _context.SaveChangesAsync();
