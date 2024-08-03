@@ -17,8 +17,7 @@ namespace HummingbirdFeeder.Pages
         {
             BaseAddress = new Uri("http://api.weatherapi.com/")
         };
-        public List<string> datesSinceLastFeederChange = new List<string>();
-        public List<double> maxTemperaturesPerDay = new List<double>();
+        public Dictionary<Feeder, Dictionary<DateTime, double>> feederData = new Dictionary<Feeder, Dictionary<DateTime, double>>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -26,6 +25,7 @@ namespace HummingbirdFeeder.Pages
             foreach (var feeder in MyFeeders)
             {
                 feeder.ChangeFeeder = null;
+                feederData[feeder] = new Dictionary<DateTime, double>();
             }
             foreach (var feeder in MyFeeders)
             {
@@ -64,7 +64,6 @@ namespace HummingbirdFeeder.Pages
         }
 
         // API and feeeder change logic
-
         public async Task GetListOfDatesSinceLastChangeDate(Feeder feeder)
         {
             string lastChangeDate = (feeder.LastChangeDate).ToString();
@@ -74,21 +73,12 @@ namespace HummingbirdFeeder.Pages
 
             for (DateTime date = changeDate; date <= today; date = date.AddDays(1))
             {
-                string dateString = date.ToString("yyyy-MM-dd");
-                datesSinceLastFeederChange.Add(dateString);
+                if (!feederData[feeder].ContainsKey(date))
+                {
+                    double maxTemp = await GetTempMaxPerDayFromWeatherApi(feeder.Zipcode, date.ToString("yyyy-MM-dd"));
+                    feederData[feeder][date] = maxTemp;
+                }
             }
-        }
-
-        public async Task GetListOfTemperatureMaxPerDate(Feeder feeder)
-        {
-            string zipcode = feeder.Zipcode;
-
-            foreach (string date in datesSinceLastFeederChange)
-            {
-                double maxTemp = await GetTempMaxPerDayFromWeatherApi(zipcode, date);
-                maxTemperaturesPerDay.Add(maxTemp);
-            }
-
         }
 
         public async Task<double> GetTempMaxPerDayFromWeatherApi(string zipcode, string date)
@@ -111,10 +101,9 @@ namespace HummingbirdFeeder.Pages
             else
             {
                 await GetListOfDatesSinceLastChangeDate(feeder);
-                await GetListOfTemperatureMaxPerDate(feeder);
 
-                double maxTemp = (maxTemperaturesPerDay).Max();
-                int daysSinceChange = datesSinceLastFeederChange.Count();
+                double maxTemp = feederData[feeder].Values.Max();
+                int daysSinceChange = feederData[feeder].Count();
 
                 if (maxTemp <= 70 && daysSinceChange >= 7) feeder.ChangeFeeder = true;
                 else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) feeder.ChangeFeeder = true;
@@ -125,13 +114,6 @@ namespace HummingbirdFeeder.Pages
                 else if (maxTemp > 92 && daysSinceChange >= 1) feeder.ChangeFeeder = true;
                 else feeder.ChangeFeeder = false;
             }
-            ResetChangeFeederLogic();
-        }
-
-        public void ResetChangeFeederLogic()
-        {
-            maxTemperaturesPerDay.Clear();
-            datesSinceLastFeederChange.Clear();
         }
     }
 }

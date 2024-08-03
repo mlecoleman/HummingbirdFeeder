@@ -53,3 +53,34 @@
 }
 
 <a href="/create" class="btn btn-success">Add New Feeder</a>
+
+@if (MyFeeders is not null && MyFeeders.Count > 0)
+{
+    <div class="table-responsive">
+        @foreach (Feeder feeder in MyFeeders)
+        {
+            <h3>Daily Highs Since Feeder @feeder.FeederName Has Been Changed</h3>
+            <h6>Temperature information over 7 days will not be displayed. Feeders should always be changed at minimum once per week regardless of temperatures.</h6>
+            <table class="table table-striped table-hover table-bordered table-light border-dark">
+                <thead>
+                    <tr>
+                        <th scope="col">Date</th>
+                        <th scope="col">Daily High Temp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (feederData.ContainsKey(feeder))
+                    {
+                        @foreach (var entry in feederData[feeder])
+                        {
+                            <tr>
+                                <td>@entry.Key.ToString("yyyy-MM-dd")</td>
+                                <td>@entry.Value</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+}
