@@ -1,12 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using HummingbirdFeeder.Data;
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using Microsoft.EntityFrameworkCore;
+﻿using HummingbirdFeeder.Data;
 using IndexPage = HummingbirdFeeder.Pages.Index;
 
 namespace Tests;
@@ -21,22 +13,19 @@ public class IndexTests
     }
 
     [Test]
-    public async Task TestCorrectNumberOfDatesGetsCalculated()
+    public async Task TestChangeDateOverOneWeekReturnsTrueForChangeFeeder()
     {
-        //Arrange - A feeder was changes 5 days in the past
+        // Arrange - Change date is odler than one week
         using var ctx = new Bunit.TestContext();
-        DateTime currentDate = DateTime.Now;
-        DateTime fiveDaysAgo = currentDate.AddDays(-5);
-        int lastChangeDate = int.Parse(fiveDaysAgo.ToString("yyyyMMdd"));
-        var feeder = new Feeder { LastChangeDate = lastChangeDate };
         var component = new IndexPage();
+        var feeder = new Feeder();
+        bool isChangeDateOlderThanOneWeek = true;
 
-        // Act - Logic runs to see how many days in the past from today the feeder was changed
-        await component.GetListOfDatesSinceLastChangeDate(feeder);
+        // Act - Logic runs to see if feeder needs to be changes
+        await component.DoesFeederNeedToBeChanged(feeder, isChangeDateOlderThanOneWeek);
 
-        // Assert - The list of days since last change shoud have 6 dates (zero based)
-        var dates = component.datesSinceLastFeederChange;
-        Assert.That(component.datesSinceLastFeederChange.Count, Is.EqualTo(6));
+        // Assert
+        Assert.That(feeder.ChangeFeeder, Is.True, "Feeder should be marked for change when change date is older than one week.");
     }
 
     [Test]

@@ -17,7 +17,7 @@ namespace HummingbirdFeeder.Pages
         {
             BaseAddress = new Uri("http://api.weatherapi.com/")
         };
-        public Dictionary<Feeder, Dictionary<DateTime, double>> feederData = new Dictionary<Feeder, Dictionary<DateTime, double>>();
+        public Dictionary<Feeder, Dictionary<DateTime, double>> feederDictionary = new Dictionary<Feeder, Dictionary<DateTime, double>>();
 
         protected override async Task OnInitializedAsync()
         {
@@ -25,7 +25,7 @@ namespace HummingbirdFeeder.Pages
             foreach (var feeder in MyFeeders)
             {
                 feeder.ChangeFeeder = null;
-                feederData[feeder] = new Dictionary<DateTime, double>();
+                feederDictionary[feeder] = new Dictionary<DateTime, double>();
             }
             foreach (var feeder in MyFeeders)
             {
@@ -64,7 +64,7 @@ namespace HummingbirdFeeder.Pages
         }
 
         // API and feeeder change logic
-        public async Task GetListOfDatesSinceLastChangeDate(Feeder feeder)
+        public async Task GetDatesSinceLastChangeDate(Feeder feeder)
         {
             string lastChangeDate = (feeder.LastChangeDate).ToString();
             DateTime changeDate = DateTime.ParseExact(lastChangeDate, "yyyyMMdd", CultureInfo.InvariantCulture);
@@ -73,10 +73,10 @@ namespace HummingbirdFeeder.Pages
 
             for (DateTime date = changeDate; date <= today; date = date.AddDays(1))
             {
-                if (!feederData[feeder].ContainsKey(date))
+                if (!feederDictionary[feeder].ContainsKey(date))
                 {
                     double maxTemp = await GetTempMaxPerDayFromWeatherApi(feeder.Zipcode, date.ToString("yyyy-MM-dd"));
-                    feederData[feeder][date] = maxTemp;
+                    feederDictionary[feeder][date] = maxTemp;
                 }
             }
         }
@@ -100,10 +100,10 @@ namespace HummingbirdFeeder.Pages
             }
             else
             {
-                await GetListOfDatesSinceLastChangeDate(feeder);
+                await GetDatesSinceLastChangeDate(feeder);
 
-                double maxTemp = feederData[feeder].Values.Max();
-                int daysSinceChange = feederData[feeder].Count();
+                double maxTemp = feederDictionary[feeder].Values.Max();
+                int daysSinceChange = feederDictionary[feeder].Count();
 
                 if (maxTemp <= 70 && daysSinceChange >= 7) feeder.ChangeFeeder = true;
                 else if (maxTemp > 70 && maxTemp <= 75 && daysSinceChange >= 6) feeder.ChangeFeeder = true;
@@ -129,7 +129,7 @@ namespace HummingbirdFeeder.Pages
 
         public void ResetChangeFeederLogic(Feeder feeder)
         {
-            feederData[feeder].Clear();
+            feederDictionary[feeder].Clear();
         }
     }
 }

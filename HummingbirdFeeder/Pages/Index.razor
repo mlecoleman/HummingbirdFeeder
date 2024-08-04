@@ -61,8 +61,8 @@
     <div class="table-responsive">
         @foreach (Feeder feeder in MyFeeders)
         {
-            <h3>Daily Highs Since Feeder @feeder.FeederName Has Been Changed</h3>
-            <h6>Temperature information over 7 days will not be displayed. Feeders should always be changed at minimum once per week regardless of temperatures.</h6>
+            <h3>Daily Highs Since @feeder.FeederName Feeder Has Been Changed</h3>
+            <h6>If the last change date is over 7 days ago, this table will not be displayed. Feeders should always be changed at minimum once per week regardless of temperatures.</h6>
             <table class="table table-striped table-hover table-bordered table-light border-dark">
                 <thead>
                     <tr>
@@ -71,9 +71,9 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @if (feederData.ContainsKey(feeder))
+                    @if (feederDictionary.ContainsKey(feeder))
                     {
-                        @foreach (var entry in feederData[feeder])
+                        @foreach (var entry in feederDictionary[feeder])
                         {
                             <tr>
                                 <td>@entry.Key.ToString("MM-dd-yyyy")</td>

@@ -16,11 +16,12 @@ else
 
         <div class="form-group mb-3">
             <label for="feederName">Feeder Name</label>
-            <InputText @bind-Value="FeederToUpdate.FeederName" class="form-control" id="feederName" />
+            <InputText @bind-Value="FeederToUpdate.FeederName" class="form-control" pattern="
+^[a-zA-Z0-9 ]*$" id="feederName"/>
         </div>
 
         <div class="form-group mb-3">
-            <label for="feederZipcode">Zip Code (Must be 5 digits)</label>
+            <label for="feederZipcode">Zipcode Where Feeder is Located (Must be 5 digits)</label>
             <InputText @bind-Value="FeederToUpdate.Zipcode" class="form-control" id="feederZipcode" pattern="\d{5}" @oninput="ValidateForm" />
             <ValidationMessage For="@(() => FeederToUpdate.Zipcode)" />
             @if (!IsZipcodeValid)
