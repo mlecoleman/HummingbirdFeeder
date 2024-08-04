@@ -37,13 +37,13 @@ FluentAssertions Version=6.12.0 <br/>
 - About Link in upper right corner links to the GitHub repo for this project
 - Hummingbird Feeder Table
   - Each row displays data for each of the User's feeders
-		- Feeder Name - Displays the name of the feeder set by the user i.e. Front Yard
-		- Zipcode - Displays the Zipcode where the feeder is located
-		- Last Change Date - Displays the last date the feeder was changed
-		- Quick Update - Allows the User to click the Feeder Changed Today button to quickly update the change date to today's date and immediately see any data for that feeder get re-calculated
-		- Check Feeder Status - Indicates if the feeder for that row is due to be changed
-		- Edit - Displays a button that on-click allows the user to edit the Feeder's name, location, or change date
-		- Delete - Displays a button that on-click allowd the user to delete the given feeder
+  - Feeder Name - Displays the name of the feeder set by the user i.e. Front Yard
+  - Zipcode - Displays the Zipcode where the feeder is located
+  - Last Change Date - Displays the last date the feeder was changed
+  - Quick Update - Allows the User to click the Feeder Changed Today button to quickly update the change date to today's date and immediately see any data for that feeder get re-calculated
+  - Check Feeder Status - Indicates if the feeder for that row is due to be changed
+  - Edit - Displays a button that on-click allows the user to edit the Feeder's name, location, or change date
+  - Delete - Displays a button that on-click allowd the user to delete the given feeder
 - Add New Feeder Button - On click redirects to a page which allows the user to create a new feeder
 - Daily Highs Table(s)
   - For each feeder a table is displayed that shows each date since the feeder was changed, and the high temperature for that day
@@ -132,6 +132,6 @@ database, and incorporate the data in your application. A minimum of one table (
 |                |Feature Implemented                          |Location                         |
 |----------------|-------------------------------|-----------------------------|
 |1|Create 3 or more unit tests for your application| The Tests folder contains 3 NUnit tests for the Index page|
-|2|Implement a regular expression (regex) to validate or ensure a field is always stored and displayed in the correct format|In the Create.razor (lines 13 & 18) and Update.razor (lines 19 & 24) files there are regular expressions used for the zipcode field that requires the input to be 5 digits and for the Feeder name field that restricts inputs to letters, numbers, or spaces.|
+|2|Implement a regular expression (regex) to validate or ensure a field is always stored and displayed in the correct format|In Create.razor (lines 13 & 18) and Update.razor (lines 19 & 24) there are regular expressions used for the zipcode field that requires the input to be 5 digits and for the Feeder name field that restricts inputs to letters, numbers, or spaces.|
 |3|Create a dictionary or list, populate it with several values, retrieve at least one value, and use it in your program|In the Index.razor.cs file I populate a dictionary using dates as the key and daily highs as the value (See method GetDatesSinceLastChangeDate -Line 67). These are then used to calculate if the feeder needs to be changed and are displayed to the UI (See method DoesFeederNeedToBeChanged - Line 95 and see the table staring on line 66 of Index.razor).|
 |4|Make your application asynchronous|Most of the methods in this app are async methods
