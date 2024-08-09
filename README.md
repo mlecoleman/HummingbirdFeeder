@@ -2,7 +2,7 @@
 # Hummingbird Feeder App
 
 ## Context and General Description
-If you've never kept a hummingbird feeder before you may not be aware, but the sugar water must be changed out regularly to keep harmful mold from growing.  In the past I've used a manual process to see if I need to change my feeder that involves keeping track of daily temperature highs.  I'm terrible at keeping track of this and end up changing the feeder more frequently than I probably need to just to be safe.  Here's the chart I use to help me figure out if my Hummingbird Feeder needed changing:
+If you've never kept a hummingbird feeder before you may not be aware, but the sugar water must be changed out regularly to keep harmful mold from growing.  In the past I've used a manual process to see if I need to change my feeder that involves keeping track of daily temperature highs.  I'm terrible at keeping track of this and end up changing the feeder more frequently than I probably need to just to be safe.  Here's the chart I use to help me figure out if my Hummingbird Feeder needs changing:
 
 ![alt text](https://i.pinimg.com/originals/ea/ac/08/eaac08f6afd61debc79bc2ea720b5a87.jpg)
 
@@ -43,7 +43,7 @@ FluentAssertions Version=6.12.0 <br/>
   - Quick Update - Allows the User to click the Feeder Changed Today button to quickly update the change date to today's date and immediately see any data for that feeder get re-calculated
   - Check Feeder Status - Indicates if the feeder for that row is due to be changed
   - Edit - Displays a button that on-click allows the user to edit the Feeder's name, location, or change date
-  - Delete - Displays a button that on-click allowd the user to delete the given feeder
+  - Delete - Displays a button that on-click allows the user to delete the given feeder
 - Add New Feeder Button - On click redirects to a page which allows the user to create a new feeder
 - Daily Highs Table(s)
   - For each feeder a table is displayed that shows each date since the feeder was changed, and the high temperature for that day
@@ -135,7 +135,7 @@ database, and incorporate the data in your application. A minimum of one table (
 
 > Create and utilize a minimum of 3 functions or methods, with at least one returning a value integral to your application.
 
-- [x] ***This Hummingbird app contains well over 10 methods.  An example of one returning a value integral to the application can be found on line 84 in method *GetTempMaxPerDayFromWeatherApi* which is located in the *Index.razor.cs* file.  This method returns the maxTemp of a certain date from the weather API which is integral to the calculation of when the feeder should be changed.***
+- [x] ***This Hummingbird app contains well over 10 methods.  An example of one returning a value integral to the application can be found in the *Index.razor.cs* file on line 84 in method *GetTempMaxPerDayFromWeatherApi*.  This method returns the maxTemp of a certain date from the weather API which is integral to the calculation of when the feeder should be changed.***
 
 -----
 
@@ -147,5 +147,5 @@ database, and incorporate the data in your application. A minimum of one table (
 |----------------|-------------------------------|-----------------------------|
 |1|Create 3 or more unit tests for your application| The Tests folder contains 3 NUnit tests for the Index page|
 |2|Implement a regular expression (regex) to validate or ensure a field is always stored and displayed in the correct format|In Create.razor (lines 13 & 18) and Update.razor (lines 19 & 24) there are regular expressions used for the zipcode field that requires the input to be 5 digits and for the Feeder name field that restricts inputs to letters, numbers, or spaces.|
-|3|Create a dictionary or list, populate it with several values, retrieve at least one value, and use it in your program|In the Index.razor.cs file I populate a dictionary using dates as the key and daily highs as the value (See method GetDatesSinceLastChangeDate -Line 67). These are then used to calculate if the feeder needs to be changed and are displayed to the UI (See method DoesFeederNeedToBeChanged - Line 95 and see the table staring on line 66 of Index.razor).|
+|3|Create a dictionary or list, populate it with several values, retrieve at least one value, and use it in your program|In the Index.razor.cs file I populate a dictionary using dates as the key and daily highs as the value (See method GetDatesSinceLastChangeDate - Line 67). These are then used to calculate if the feeder needs to be changed and are displayed to the UI (See method DoesFeederNeedToBeChanged - Line 95 and see the table starting on line 66 of Index.razor).|
 |4|Make your application asynchronous|Most of the methods in this app are async methods
